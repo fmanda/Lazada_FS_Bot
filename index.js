@@ -10,17 +10,7 @@
 //4. tambahkan ke TROLI & checkout
 //5. pembayaran, sukses loop ke step no 2 sejumlah products array
 
-const user = '7.sourcecode@gmail.com'
-const password = 'fmasecret1'
-const paymentmethod = 'COD';
-//COD; Mandiri; BCA; dst, ,hati2 case sensitive
-
-//bot akan meloop proses FS sejumlah array dibawah,
-//misal ingin 2x proses produk yg sama, inputkan 2x di array dibawah dengan format {name:'name',url:'url'}
-const products = [
-	{name:'5A Grey', url:'https://www.lazada.co.id/products/xiaomi-mi-power-bank-10000mah-silver-i160040604-s181911598.html'}
-	// {name:'5A Gold', url:'https://www.lazada.co.id/products/xiaomi-redmi-5a-gold-snapdragron-425-quad-core-i160043545-s181917409.html'}
-]
+var cfg = require('./config.json');
 
 const puppeteer = require('puppeteer')
 const loginurl = 'https://member.lazada.co.id/user/login'
@@ -35,14 +25,22 @@ const btn_del_cart = 'span.lazada.lazada-ic-Delete.lazada-icon.icon.delete';
 const xpath_del_cart = '//button[contains(.,"HAPUS")]'
 
 async function login(page){
-	console.log('login user ');
-	await page.goto(loginurl, { waitUntil: 'networkidle2' })
-	await page.click('input[type="text"]')
-	await page.keyboard.type(user)
-	await page.click('input[type="password"]')
-	await page.keyboard.type(password);
-	await page.click('button[type="submit"]')
-	await page.waitForNavigation();
+	// while (true){ //locked account
+	// 	try{
+			console.log('login user ');
+			await page.goto(loginurl, { waitUntil: 'networkidle2' })
+			await page.click('input[type="text"]')
+			await page.keyboard.type(cfg.user)
+			await page.click('input[type="password"]')
+			await page.keyboard.type(cfg.password);
+			await page.click('button[type="submit"]')
+			await page.waitForNavigation();
+			// break;
+		// }catch(err){
+		// 	console.log(err);
+		// }
+	// }
+
 }
 
 async function clearCart(page){
@@ -95,7 +93,7 @@ async function doPayment(page, product){
 			var button = (await page.$x('//button[contains(.,"LANJUTKAN KE PEMBAYARAN")]'))[0];
 			await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
 
-			if (paymentmethod == 'COD'){
+			if (cfg.paymentmethod == 'COD'){
 				var button = (await page.$x('//div[contains(@class, "pay-method-item") and contains(., "di Tempat")]'))[0];
 				// var button = (await page.$x('//div[.="Bayar di Tempat"]'))[0];
 				console.log(button);
@@ -104,12 +102,14 @@ async function doPayment(page, product){
 				var button = (await page.$x('//div[.="melalui bank transfer"]'))[0];
 				await Promise.all([ button.click(), page.waitForSelector('div.checkbox-list.item-content') ]);
 
-				var button = (await page.$x('//p[contains(@class, "bank-name") and text() = "'+ paymentmethod + '"]'))[0];
+				var button = (await page.$x('//p[contains(@class, "bank-name") and text() = "'+ cfg.paymentmethod + '"]'))[0];
 				await button.click()
 			}
 
-      var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
-			await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
+			if (!cfg.test){
+      	var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
+				await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
+			}
 
 			break;
 		}catch(err){
@@ -120,6 +120,8 @@ async function doPayment(page, product){
 }
 
 try {
+	// console.log(cfg);
+	// return;
 	(async () => {
 		const browser = await puppeteer.launch({
 			headless: false,  /*userDataDir: newchromeprofile,executablePath: chromepath*/
@@ -128,7 +130,7 @@ try {
 		await page.setViewport({ width: 0, height: 0 })
 		await login(page)
 
-		for (var product of products){
+		for (var product of cfg.products){
 			console.log('Proses Flash Sale : ' + product.name + ', url : ' + product.url);
 			await clearCart(page);
 			await addToCart(page, product);
