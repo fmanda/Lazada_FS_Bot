@@ -139,9 +139,9 @@ try {
 
 		for (var product of cfg.products){
 			console.log('Proses Flash Sale : ' + product.name + ', url : ' + product.url);
-			// await clearCart(page);
-			// await addToCart(page, product);
-			// await doPayment(page, product);
+			await clearCart(page);
+			await addToCart(page, product);
+			await doPayment(page, product);
 			console.log('Selesai Flash Sale : ' + product.name + ', url : ' + product.url + '\n');
 		}
 		console.log('Done')
