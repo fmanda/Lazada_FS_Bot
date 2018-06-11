@@ -106,10 +106,8 @@ async function doPayment(page, product){
 				await button.click()
 			}
 
-			if (!cfg.test){
-      	var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
-				await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
-			}
+    	var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
+			await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
 
 			break;
 		}catch(err){
