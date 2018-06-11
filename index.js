@@ -10,7 +10,16 @@
 //4. tambahkan ke TROLI & checkout
 //5. pembayaran, sukses loop ke step no 2 sejumlah products array
 
-var cfg = require('./config.json');
+var config_file_name = '';
+if (process.argv[2]) {
+	config_file_name = process.argv[2];
+}else{
+	throw	"Parameter config tidak didefinisikan"
+}
+var cfg = require('./' + config_file_name);
+
+console.log(cfg);
+// return;
 
 const puppeteer = require('puppeteer')
 const loginurl = 'https://member.lazada.co.id/user/login'
@@ -130,9 +139,9 @@ try {
 
 		for (var product of cfg.products){
 			console.log('Proses Flash Sale : ' + product.name + ', url : ' + product.url);
-			await clearCart(page);
-			await addToCart(page, product);
-			await doPayment(page, product);
+			// await clearCart(page);
+			// await addToCart(page, product);
+			// await doPayment(page, product);
 			console.log('Selesai Flash Sale : ' + product.name + ', url : ' + product.url + '\n');
 		}
 		console.log('Done')
