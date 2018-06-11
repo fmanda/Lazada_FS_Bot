@@ -96,8 +96,10 @@ async function doPayment(page, product){
 			await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
 
 			if (paymentmethod == 'COD'){
-				var button = (await page.$x('//div[.="Bayar di Tempat"]'))[0];
-				await Promise.all([ button.click(), page.waitForSelector('div.checkbox-list.item-content') ]);
+				var button = (await page.$x('//div[contains(@class, "pay-method-item") and contains(., "di Tempat")]'))[0];
+				// var button = (await page.$x('//div[.="Bayar di Tempat"]'))[0];
+				console.log(button);
+				await button.click()
 			}else{
 				var button = (await page.$x('//div[.="melalui bank transfer"]'))[0];
 				await Promise.all([ button.click(), page.waitForSelector('div.checkbox-list.item-content') ]);
@@ -106,12 +108,13 @@ async function doPayment(page, product){
 				await button.click()
 			}
 
-      // var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
-			// await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
+      var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
+			await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
 
 			break;
 		}catch(err){
 			console.log(product.name + ' : Gagal proses pembayaran')
+			console.log(err)
 		}
 	}
 }
