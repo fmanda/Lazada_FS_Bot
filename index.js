@@ -18,7 +18,7 @@ if (process.argv[2]) {
 }
 var cfg = require('./' + config_file_name);
 
-console.log(cfg);
+// console.log(cfg);
 // return;
 
 const puppeteer = require('puppeteer')

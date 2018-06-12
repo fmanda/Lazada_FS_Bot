@@ -1,11 +1,15 @@
 {
   "user" : "fmandacelluler@gmail.com",
   "password" : "fmasecret1",
-  "paymentmethod" : "Mandiri",
+  "paymentmethod" : "COD",
   "products" : [
   	{
-      "name":"5A Grey",
-      "url":"https://www.lazada.co.id/products/xiaomi-mi-power-bank-10000mah-silver-i160040604-s181911598.html"
-    }
+      "name":"Asus Zenfone Max Pro M1",
+      "url":"https://www.lazada.co.id/products/asus-zenfone-max-pro-m1-zb602kl-i319671794-s325148883.html"
+    },
+	{
+      "name":"Asus Zenfone Max Pro M1",
+      "url":"https://www.lazada.co.id/products/asus-zenfone-max-pro-m1-zb602kl-i319671794-s325148883.html"
+    }  
   ]
 }
