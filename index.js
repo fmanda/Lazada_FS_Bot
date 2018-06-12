@@ -105,8 +105,9 @@ async function doPayment(page, product){
 			if (cfg.paymentmethod == 'COD'){
 				var button = (await page.$x('//div[contains(@class, "pay-method-item") and contains(., "di Tempat")]'))[0];
 				// var button = (await page.$x('//div[.="Bayar di Tempat"]'))[0];
-				console.log(button);
-				await button.click()
+				// console.log(button);
+				await Promise.all([ button.click(), page.waitForSelector('div.btn-place-order-wrap') ]);
+				// await button.click()
 			}else{
 				var button = (await page.$x('//div[.="melalui bank transfer"]'))[0];
 				await Promise.all([ button.click(), page.waitForSelector('div.checkbox-list.item-content') ]);
