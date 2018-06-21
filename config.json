@@ -1,15 +1,12 @@
 {
-  "user" : "fmandacelluler@gmail.com",
+  "user" : "n4uf4lr1fqy4rk4n@gmail.com",
   "password" : "fmasecret1",
-  "paymentmethod" : "COD",
+  "paymentmethod" : "Mandiri",
   "products" : [
-  	{
-      "name":"Redmi 5A",
-      "url":"https://www.lazada.co.id/products/xiaomi-redmi-5a-gold-snapdragron-425-quad-core-i160043545-s181917409.html"
-    },
-	{
-      "name":"Redmi 5A",
-      "url":"https://www.lazada.co.id/products/xiaomi-redmi-5a-gold-snapdragron-425-quad-core-i160043545-s181917409.html"
+
+	  {
+      "name":"Redmi 5A Gold",
+      "url":"https://www.lazada.co.id/products/xiaomi-redmi-5a-gold-i322813079-s328605113.html"
     }
   ]
 }

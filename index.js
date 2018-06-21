@@ -84,12 +84,20 @@ async function addToCart(page, product){
 			if (!button) {continue;}
 			try{
 				await Promise.all( [button.click(), page.waitForSelector(dialog_cart_selector,{timeout : 30000}) ])
+				console.log("cek cart");
+				if (await checkCart(page)){ //jika sudah ada di cart, lanjut payment
+					console.log("cek cart break");
+					break;
+				}else{
+					console.log("cek cart continue");
+					continue; //proses ulang					
+				}
 				//testing
 				// throw	"test exception"
 
 			}catch(err){
 				console.log(err);
-				if (checkCart(page)){ //jika sudah ada di cart, lanjut payment
+				if (await checkCart(page)){ //jika sudah ada di cart, lanjut payment
 					break;
 				}else{
 					continue; //proses ulang
@@ -109,6 +117,7 @@ async function doPayment(page, product){
 	while (true){
 		try{
 			await page.goto(carturl, { waitUntil: 'networkidle2' });
+			//check cart
 
 			var button = (await page.$x('//button[contains(.,"LANJUTKAN KE PEMBAYARAN")]'))[0];
 			await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
@@ -132,7 +141,6 @@ async function doPayment(page, product){
 
 			break;
 		}catch(err){
-			check sekali lagi
 			try{
 				var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
 				await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
