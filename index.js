@@ -52,6 +52,13 @@ async function login(page){
 
 }
 
+async function checkCart(page){
+	console.log('Check cart');
+	await page.goto(carturl, { waitUntil: 'networkidle2' });
+	const delexists = !!(await page.$(btn_del_cart));
+	return delexists; //sudah ada di cart
+}
+
 async function clearCart(page){
 	console.log('Reset cart');
 	while (true){
@@ -76,15 +83,22 @@ async function addToCart(page, product){
 			var button = (await page.$x('//button[contains(.,"TAMBAH KE TROLI")]'))[0];
 			if (!button) {continue;}
 			try{
-				await Promise.all( [button.click(), page.waitForSelector(dialog_cart_selector,{timeout : 3000}) ])
+				await Promise.all( [button.click(), page.waitForSelector(dialog_cart_selector,{timeout : 30000}) ])
+				//testing
+				// throw	"test exception"
+
 			}catch(err){
 				console.log(err);
-				await clearCart(page);
-				continue;
+				if (checkCart(page)){ //jika sudah ada di cart, lanjut payment
+					break;
+				}else{
+					continue; //proses ulang
+				}
+				// await clearCart(page);
 			}
 			break;
 		}catch(err){
-			console.log(product.name + ' : Gagal Tambah ke Troli, Refresh Halaman Product')
+			console.log(product.name + ' : Gagal Tambah ke Troli, Check Cart')
 			console.log(err)
 		}
 	}
@@ -104,8 +118,6 @@ async function doPayment(page, product){
 
 			if (cfg.paymentmethod == 'COD'){
 				var button = (await page.$x('//div[contains(@class, "pay-method-item") and contains(., "di Tempat")]'))[0];
-				// var button = (await page.$x('//div[.="Bayar di Tempat"]'))[0];
-				// console.log(button);
 				await Promise.all([ button.click(), page.waitForSelector('div.btn-place-order-wrap') ]);
 				// await button.click()
 			}else{
@@ -115,12 +127,19 @@ async function doPayment(page, product){
 				var button = (await page.$x('//p[contains(@class, "bank-name") and text() = "'+ cfg.paymentmethod + '"]'))[0];
 				await button.click()
 			}
-
-    	var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
+			var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
 			await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
 
 			break;
 		}catch(err){
+			check sekali lagi
+			try{
+				var button = (await page.$x('//button[contains(.,"BUAT PESANAN SEKARANG")]'))[0];
+				await Promise.all([ button.click(), page.waitForNavigation({ waitUntil: 'networkidle2' }) ]);
+				break;
+			}catch(err2){
+			}
+
 			console.log(product.name + ' : Gagal proses pembayaran')
 			console.log(err)
 		}
